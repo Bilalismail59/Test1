@@ -1,0 +1,53 @@
+{
+		// Doc : https://docs/devcontainers/containers
+	
+		// Définition du nom du devcontainer
+		"name": "Test1",
+	
+	
+		/* GENERATION DU DEVCONTAINER */
+		// Utilisation d'une image Docker existante
+		// Image de base pour python
+		"image": "python:3.12",
+	
+		// Utilisation d'un Dockerfile
+		// "build": { 
+		//   "dockerfile": "Dockerfile"
+		// },
+	
+		// Utilisation de Docker Compose
+		// "dockerComposeFile": "../compose.yml",
+		// "service": "devcontainer",
+		// "shutdownAction": "stopCompose",
+	
+	
+		/* CONFIGURATION DU DEVCONTAINER */
+		"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	
+		// Ajout d'extensions à Visual Studio Code
+		"customizations": {
+		  "vscode": {
+			"extensions": [
+			  "ms-azuretools.vscode-docker",
+			  "ms-vsliveshare.vsliveshare",
+			  "yzhang.markdown-all-in-one",
+			  "ms-python.python"
+			]
+		  }
+		}
+	
+		// "forwardPorts": [3000],
+	
+		// "portsAttributes": {
+		//     "3000": {
+		//       "label": "Hello Remote World",
+		//       "onAutoForward": "notify"
+		//     }
+		// },
+		
+		// Use 'postCreateCommand' to run commands after the container is created.
+		// "postCreateCommand": "chmod 700 ~/.ssh/*",
+	  
+		// Use root to have git control. More info: https://aka.ms/dev-containers-non-root.
+		// "remoteUser": "vscode"
+	  }
