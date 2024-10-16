@@ -1,10 +1,38 @@
 # Usage : dans la console `python ./projet/task_manager.py`
+print("Bienvenue dans le système de gestion des tâches DevOps !")
 import os # j'importe le module (natif) `os` pour « parler » à mon système d'exploitation
 
 tasks = []
 
+def add_task():
+    description = ""
+    priority = ""
+
+    # TANT QUE description est vide
+    while not description:
+        # `strip` supprime les espaces en début et din de chaîne
+        description = input("Entrez la description de la tâche : ").strip()
+
+    # TANT QUE priority est vide
+    while not priority:
+        priority = input("Entrez la priorité de la tâche ([H]aute, [M]oyenne, [B]asse) : ").lower()
+
+         # SI priority est ni H ni M ni B
+        if priority != "h" and priority != "m" and priority != "b":
+            # ALORS erreur → j'efface la saisie utilisateur et je retourne dans ma boucle
+            print("Priorité non reconnue, réponse attendue : H, M ou B")
+            priority = ""
+
+
+    # je crée une nouvelle tâche → dictionnaire (possible avec tuple ou list)
+    task = { "description": description, "priority": priority }
+    # ajoute à ma liste des tâche
+    tasks.append(task)
+
+    print("La tâche a été ajoutée avec succès !")
+
 def main():
-     # Nettoyer le terminal
+    # Nettoyer le terminal
     # appelle `cls` si le nom de l'OS est `nt` (Windows ?) sinon appelle `clear`
     #
     # correspond à
@@ -12,8 +40,7 @@ def main():
     #     os.system("cls")
     # else:
     #     os.system("clear")
-
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
     
     print("Bienvenue dans le système de gestion des tâches DevOps !")
 
@@ -26,7 +53,7 @@ def main():
             case "v":
                 print("appeler Voir")
             case "a":
-                print("appeler Ajouter")
+                add_task()
             case "m":
                 print("appeler Modifier")
             case "s":
