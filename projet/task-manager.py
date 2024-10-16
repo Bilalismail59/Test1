@@ -3,6 +3,42 @@ print("Bienvenue dans le système de gestion des tâches DevOps !")
 import os # j'importe le module (natif) `os` pour « parler » à mon système d'exploitation
 
 tasks = []
+priority_levels = {
+    "h": "Haute",
+    "m": "Moyenne",
+    "b": "Basse",
+    "t": "Top",
+}
+
+def get_priority_options():
+    """
+    Retourne `[H]aute, [M]oyenne, [B]asse` depuis le dictionnaire des priorités
+    """
+    result = []
+
+    # `dictionnaire.values()` crée une liste avec toutes les valeurs du dictionnaire
+    # → ['Haute', 'Moyenne', 'Basse']
+    # POUR CHAQUE valeur de mon dictionnaire
+    for priority in priority_levels.values():
+        result.append(f"[{priority[0].upper()}]{priority[1:]}")
+
+    # → ['[H]aute', '[M]oyenne', '[B]asse']
+
+    # concatène les éléments de ma liste en les séparant par `, `
+    # → [H]aute, [M]oyenne, [B]asse
+    return ', '.join(result)
+
+
+def get_priority_initials():
+    """
+    Retourne `H, M, B` depuis le dictionnaire des priorités
+    """
+    # `dictionnaire.keys()` crée une liste avec toutes les clés du dictionnaire
+    # → ['h', 'm', 'b']
+    # concatène les éléments de ma liste en les séparant par `, `
+    # → h, m, b
+    return ', '.join(priority_levels.keys()).upper()
+
 
 def add_task():
     description = ""
@@ -15,21 +51,40 @@ def add_task():
 
     # TANT QUE priority est vide
     while not priority:
-        priority = input("Entrez la priorité de la tâche ([H]aute, [M]oyenne, [B]asse) : ").lower()
+        priority = input(f"Entrez la priorité de la tâche ({get_priority_options()}) : ").strip().lower()
 
-         # SI priority est ni H ni M ni B
-        if priority != "h" and priority != "m" and priority != "b":
+        # SI priority n'est pas une initiale de mon dictionnaire de niveaux de propriétés
+        # `priority_levels.keys()` → ['h', 'm', 'b', 't']
+        if not priority in priority_levels.keys():
             # ALORS erreur → j'efface la saisie utilisateur et je retourne dans ma boucle
-            print("Priorité non reconnue, réponse attendue : H, M ou B")
+            print(f"Priorité non reconnue, réponse attendue : {get_priority_initials()}")
             priority = ""
 
-
     # je crée une nouvelle tâche → dictionnaire (possible avec tuple ou list)
-    task = { "description": description, "priority": priority }
+    # je vais chercher l'élément de mon dictionnaire qui a pour clé la valeur stockée dans `priority` (h, m ou b)
+    priority_label = priority_levels[priority]
+    task = { "description": description, "priority": priority_label }
     # ajoute à ma liste des tâche
     tasks.append(task)
 
     print("La tâche a été ajoutée avec succès !")
+
+
+def display_tasks():
+    if not tasks:
+        print("Aucune tâche à afficher")
+        return # arrête l'exécution de la fonction (on sort de la fonction)
+    
+    # for task in tasks:
+    #     # print(task) # → {'description': 'nom tâche', 'priority': 'Haute'}
+    #     print(f"\t{task['description']} – [{task['priority']}]")
+
+    print("Liste des tâches actuelles :")
+
+    # `enumerate()` permet de récupérer la tâche et son index dans la liste des tâches
+    for task_index, task in enumerate(tasks, start=1):
+        print(f"\t[{task_index}] {task['description']} (Priorité : {task['priority']})")
+
 
 def main():
     # Nettoyer le terminal
@@ -51,7 +106,7 @@ def main():
 
         match action.lower():
             case "v":
-                print("appeler Voir")
+                display_tasks()
             case "a":
                 add_task()
             case "m":
