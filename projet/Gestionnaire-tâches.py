@@ -16,16 +16,9 @@ def get_priority_options():
     """
     result = []
 
-    # `dictionnaire.values()` crée une liste avec toutes les valeurs du dictionnaire
-    # → ['Haute', 'Moyenne', 'Basse']
-    # POUR CHAQUE valeur de mon dictionnaire
     for priority in priority_levels.values():
         result.append(f"[{priority[0].upper()}]{priority[1:]}")
 
-    # → ['[H]aute', '[M]oyenne', '[B]asse']
-
-    # concatène les éléments de ma liste en les séparant par `, `
-    # → [H]aute, [M]oyenne, [B]asse
     return ', '.join(result)
 
 
@@ -33,10 +26,6 @@ def get_priority_initials():
     """
     Retourne `H, M, B` depuis le dictionnaire des priorités
     """
-    # `dictionnaire.keys()` crée une liste avec toutes les clés du dictionnaire
-    # → ['h', 'm', 'b']
-    # concatène les éléments de ma liste en les séparant par `, `
-    # → h, m, b
     return ', '.join(priority_levels.keys()).upper()
 
 
@@ -44,27 +33,18 @@ def add_task():
     description = ""
     priority = ""
 
-    # TANT QUE description est vide
     while not description:
-        # `strip` supprime les espaces en début et din de chaîne
         description = input("Entrez la description de la tâche : ").strip()
 
-    # TANT QUE priority est vide
     while not priority:
         priority = input(f"Entrez la priorité de la tâche ({get_priority_options()}) : ").strip().lower()
 
-        # SI priority n'est pas une initiale de mon dictionnaire de niveaux de propriétés
-        # `priority_levels.keys()` → ['h', 'm', 'b', 't']
         if not priority in priority_levels.keys():
-            # ALORS erreur → j'efface la saisie utilisateur et je retourne dans ma boucle
             print(f"Priorité non reconnue, réponse attendue : {get_priority_initials()}")
             priority = ""
 
-    # je crée une nouvelle tâche → dictionnaire (possible avec tuple ou list)
-    # je vais chercher l'élément de mon dictionnaire qui a pour clé la valeur stockée dans `priority` (h, m ou b)
     priority_label = priority_levels[priority]
     task = { "description": description, "priority": priority_label }
-    # ajoute à ma liste des tâche
     tasks.append(task)
 
     print("La tâche a été ajoutée avec succès !")
@@ -73,30 +53,100 @@ def add_task():
 def display_tasks():
     if not tasks:
         print("Aucune tâche à afficher")
-        return # arrête l'exécution de la fonction (on sort de la fonction)
+        return
     
-    # for task in tasks:
-    #     # print(task) # → {'description': 'nom tâche', 'priority': 'Haute'}
-    #     print(f"\t{task['description']} – [{task['priority']}]")
-
     print("Liste des tâches actuelles :")
 
-    # `enumerate()` permet de récupérer la tâche et son index dans la liste des tâches
     for task_index, task in enumerate(tasks, start=1):
         print(f"\t[{task_index}] {task['description']} (Priorité : {task['priority']})")
 
+
 def edit_task():
-    pass
+    # on récupère l'index saisi par l'utilisateur (+ gestion des erreurs)
+    index = ask_index("modifier")
+
+    print("Note : laissez le champ vide pour ne pas le modifier")
+
+    # on récupère les champs saisis
+    description = input('Entrez la description de la tâche : ').strip()
+    priority = input(f"Entrez la priorité de la tâche ({get_priority_options()}) : ").strip().lower()
+
+    # SI on a une description, on la modifie dans la liste des tâches
+    # (SINON on laisse comme ça, on fait rien)
+    if description:
+        tasks[index - 1]["description"] = description
+
+    # SI on a une priorité, on la modifie dans la liste des tâches
+    # (SINON on laisse comme ça, on fait rien)
+    if priority and priority in priority_levels.keys():
+        tasks[index - 1]["priority"] = priority_levels[priority]
+
+    print("La tâche a été modifiée avec succès !")
 
 
 def delete_task():
+    index = ask_index("supprimer")
+    # on supprime l'élément de la liste à l'index `index - 1`
+    tasks.pop(index - 1)
+
+    print("La tâche a été supprimée avec succès !")
+
+
+def save_tasks():
     pass
 
 
-def save_task():
-    pass
+def ask_index(action):
+    display_tasks()
+
+    # TANT QUE l'index saisi n'est pas valide
+    while True:
+        index = input(f"Saisir l'index de la tâche à {action} : ").strip()
+
+        # est-ce que la saisie est un chiffre et correspond à un index de ma liste
+        if index.isdigit() and 1 <= int(index) <= len(tasks):
+            index = int(index)
+            break
+        else:
+            print('Veuillez saisir un index de tâche valide.')
+
+    # on retourne l'index saisi pour utilisation dans edit et delete
+    return index
 
 def main():
+    os.system("cls" if os.name == "nt" else "clear")
+    
+    print("Bienvenue dans le système de gestion des tâches DevOps !")
+
+    while True:
+        print()
+
+        action = input("Voulez-vous [V]oir, [A]jouter, [M]odifier, [S]upprimer, [E]nregistrer ou [Q]uitter ? ").strip()
+
+        match action.lower():
+            case "v":
+                display_tasks()
+            case "a":
+                add_task()
+            case "m":
+                edit_task()
+            case "s":
+                delete_task()
+            case "e":
+                save_tasks()
+            case "q":
+                print("À bientôt !")
+                break
+            case _:
+                print("Action inconnue")
+                print("Merci d'utiliser la première lettre de l'action à effectuer")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
     # Nettoyer le terminal
     # appelle `cls` si le nom de l'OS est `nt` (Windows ?) sinon appelle `clear`
     #
