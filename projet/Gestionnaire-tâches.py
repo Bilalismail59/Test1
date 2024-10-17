@@ -85,6 +85,16 @@ def display_tasks():
     for task_index, task in enumerate(tasks, start=1):
         print(f"\t[{task_index}] {task['description']} (Priorité : {task['priority']})")
 
+def edit_task():
+    pass
+
+
+def delete_task():
+    pass
+
+
+def save_task():
+    pass
 
 def main():
     # Nettoyer le terminal
